@@ -1,0 +1,73 @@
+<doxygenlayout version="1.0">
+    <navindex>
+        <tab type="usergroup" url="@ref section" title="section">
+            <tab type="user" url="@ref section_1" title="Subsection 1"/>
+            <tab type="user" url="@ref section_2" title="Subsection 2"/>
+        </tab>
+
+        <tab type="classes" visible="yes" title="Data Structures">
+            <tab type="classlist" visible="yes" title="Class List" intro=""/>
+            <tab type="classindex" visible="yes" title=""/>
+            <tab type="hierarchy" visible="yes" title="" intro=""/>
+            <tab type="classmembers" visible="no" title="" intro=""/>
+        </tab>
+    </navindex>
+ <class>
+    <includes visible="$SHOW_INCLUDE_FILES"/>
+    <briefdescription visible="yes"/>
+    <memberdecl>
+      <nestedclasses visible="yes" title=""/>
+      <publictypes title=""/>
+      <services title=""/>
+      <interfaces title=""/>
+      <publicslots title=""/>
+      <signals title=""/>
+      <publicmethods title=""/>
+      <publicstaticmethods title=""/>
+      <publicattributes title=""/>
+      <publicstaticattributes title=""/>
+      <protectedtypes title=""/>
+      <protectedslots title=""/>
+      <protectedmethods title=""/>
+      <protectedstaticmethods title=""/>
+      <protectedattributes title=""/>
+      <protectedstaticattributes title=""/>
+      <packagetypes title=""/>
+      <packagemethods title=""/>
+      <packagestaticmethods title=""/>
+      <packageattributes title=""/>
+      <packagestaticattributes title=""/>
+      <properties title=""/>
+      <events title=""/>
+      <privatetypes title=""/>
+      <privateslots title=""/>
+      <privatemethods title=""/>
+      <privatestaticmethods title=""/>
+      <privateattributes title=""/>
+      <privatestaticattributes title=""/>
+      <friends title=""/>
+      <related title="" subtitle=""/>
+      <membergroups visible="yes"/>
+    </memberdecl>
+    <detaileddescription title="" visible="yes"/>
+    <inheritancegraph visible="$CLASS_GRAPH"/>
+    <collaborationgraph visible="$COLLABORATION_GRAPH"/>
+    <memberdef>
+      <inlineclasses title=""/>
+      <typedefs title=""/>
+      <enums title=""/>
+      <services title=""/>
+      <interfaces title=""/>
+      <constructors title=""/>
+      <functions title=""/>
+      <related title=""/>
+      <variables title=""/>
+      <properties title=""/>
+      <events title=""/>
+    </memberdef>
+    <allmemberslink visible="yes"/>
+    <usedfiles visible="$SHOW_USED_FILES"/>
+    <authorsection visible="yes"/>
+  </class>
+
+</doxygenlayout>
