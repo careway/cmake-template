@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 
 
-project(example LANGUAGES CXX)
+project(RPPROJECTNAME LANGUAGES CXX)
 # Enable testing
 enable_testing()
 
@@ -64,8 +64,8 @@ add_subdirectory(thirdparty)
 ##############################
 # Add project subdirectories #
 ##############################
-set(example_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
-set(example_include_dir ${example_source_dir}/include)
+set(RPPROJECTNAME_source_dir ${CMAKE_CURRENT_SOURCE_DIR})
+set(RPPROJECTNAME_include_dir ${RPPROJECTNAME_source_dir}/include)
 
 add_subdirectory(src)
 
@@ -74,13 +74,13 @@ find_package(Threads REQUIRED)
 message(STATUS "Composing libraries: ${build_libraries}")
 
 add_library(${PROJECT_NAME}
-    ### Whatever is in the library
+    src/main.cpp
 )
 target_include_directories(${PROJECT_NAME}
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     PUBLIC $<INSTALL_INTERFACE:include>)
 
-add_library(ALIAS::example ALIAS ${PROJECT_NAME})
+add_library(RPALIAS::RPPROJECTNAME ALIAS ${PROJECT_NAME})
 
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
@@ -91,7 +91,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 # Library/Archive output directory
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PREFIX lib
-    OUTPUT_NAME example
+    OUTPUT_NAME RPPROJECTNAME
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
@@ -133,15 +133,15 @@ endif()
 # Install prefix for searching for dependencies is library origin
 set(CMAKE_INSTALL_RPATH $ORIGIN)
 install(EXPORT ${PROJECT_NAME}Targets
-    FILE example-${type}-targets.cmake
-    NAMESPACE ALIAS::
-    DESTINATION lib/cmake/example
+    FILE RPPROJECTNAME-${type}-targets.cmake
+    NAMESPACE RPALIAS::
+    DESTINATION lib/cmake/RPPROJECTNAME
     COMPONENT ${PROJECT_NAME}
 )
 
 install(FILES
-    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/exampleConfig.cmake"
-    DESTINATION lib/cmake/example
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/RPPROJECTNAMEConfig.cmake"
+    DESTINATION lib/cmake/RPPROJECTNAME
     COMPONENT ${PROJECT_NAME})
 
 
@@ -155,13 +155,24 @@ install(FILES
 include(cmake/GitVersion.cmake)
 get_version_from_git()
 
+
+# ============================================================================
+# Versioning Configuration
+# ============================================================================
+
+add_custom_target( versioning
+ COMMAND ${CMAKE_COMMAND} -DPROJECT_NAME=${PROJECT_NAME} -DDOXYFILE_IN=${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/Doxyfile.in -DDOXYFILE_OUT=${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile -P ${CMAKE_CURRENT_SOURCE_DIR}/cmake/genVersionFiles.cmake
+ BYPRODUCTS  ${CMAKE_CURRENT_SOURCE_DIR}/include/version.h ${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile
+)
+
+
 # ============================================================================
 # Doxygen Configuration
 # ============================================================================
 
 find_package(Doxygen)
 option(BUILD_DOCUMENTATION "Create and install the HTML based API        
-documentation (requires Doxygen)"    ${DOXYGEN_FOUND})
+documentation (requires Doxygen)" ${DOXYGEN_FOUND})
 
 if(${BUILD_DOCUMENTATION})
 
@@ -170,27 +181,19 @@ if(${BUILD_DOCUMENTATION})
         COMMAND ${DOXYGEN_EXECUTABLE} -d preprocessor ${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile > /dev/null 2>&1
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating API documentation with Doxygen"
-        BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}doc/html ${CMAKE_CURRENT_SOURCE_DIR}doc/latex
-        DEPENDS doc/Doxyfile
+        BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}/doc/html ${CMAKE_CURRENT_SOURCE_DIR}/doc/latex
+        DEPENDS doc/Doxyfile versioning
         VERBATIM
     )
-    file(CONFIGURE OUTPUT doc/Doxyfile CONTENT ${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/Doxyfile.in @ONLY)
-    set_target_properties(docs PROPERTIES CMAKE_CONFIGURE_DEPENDS)
-    add_custom_command(TARGET docs POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/config
-        ${CMAKE_CURRENT_SOURCE_DIR}/doc/html/config
-        COMMENT "Copying config directory to Doxygen HTML output"
-    )
+    # # Enable in case of adding more things to docs 
+    # add_custom_command(TARGET docs POST_BUILD
+    #     COMMAND ${CMAKE_COMMAND} -E copy_directory
+    #         ${CMAKE_CURRENT_SOURCE_DIR}/config
+    #         ${CMAKE_CURRENT_SOURCE_DIR}/doc/html/config
+    #     COMMENT "Copying config directory to Doxygen HTML output"
+    #     GENERATED ${CMAKE_CURRENT_SOURCE_DIR}/doc/html/config
+    # )
 endif()
-
-# ============================================================================
-# Versioning Configuration
-# ============================================================================
-
-
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/version.h.in include/example/version.h @ONLY)
-
 
 # ============================================================================
 # CPack Configuration

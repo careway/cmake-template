@@ -1,0 +1,15 @@
+
+#C++ / CMake 
+build
+install
+
+# Generated content
+
+## version file
+include/version.h
+
+## documentation
+doc/html
+doc/latex
+doc/Doxyfile
+
